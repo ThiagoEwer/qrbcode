@@ -15,11 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'LEITOR QRBAR',
-      theme: ThemeData(primaryColor: Colors.blue),
-      home: const HomeScreen(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'LEITOR QRBAR',
+        theme: ThemeData(primaryColor: Colors.blue),
+        home: const HomeScreen());
   }
 }
 
@@ -119,22 +118,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
                       Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-//LUGAR ONDE VAI O PRIMEIRO GET DO PROJETO
-
+                            children: [
                               SizedBox(
-                                  child: Text(
-                                '  02, Fev, 2023',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.white),
-                              )),
+                                height: 27,
+                                child: TextButton(
+                                    onPressed: () {},
+                                    child: const Text('TEST',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white
+                                    ),)),
+                              )
                             ],
                           ),
                           Row(
