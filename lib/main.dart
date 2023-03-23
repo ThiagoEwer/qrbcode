@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:intl/intl.dart';
 import 'package:qrbcode/screen/qrbar.dart';
-import './model/table.dart';
-import './api/reqhoras.dart';
+import 'db/table.dart';
+import 'api/get/reqhoras.dart';
 import 'package:meta/meta.dart';
 
 void main() {

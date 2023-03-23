@@ -1,9 +1,11 @@
+
 import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'produto.dart';
 
-import '../api/reqhoras.dart';
-import '../model/table.dart';
+import '../api/get/reqhoras.dart';
+import '../db/table.dart';
 
 class Qrbar extends StatefulWidget {
   const Qrbar({Key key}) : super(key: key);
@@ -90,11 +92,17 @@ class _QrbarState extends State<Qrbar> {
                           padding: const EdgeInsets.only(left: 138, top: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            children: const [
+                            children: [
                               ElevatedButton(
-                                  onPressed: null,
-                                  child: Icon(
-                                    Icons.exit_to_app,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const Produtos()),
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.info_outline_sharp,
                                     color: Colors.white,
                                   )),
                             ],
