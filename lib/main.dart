@@ -38,6 +38,48 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Color.fromARGB(255, 29, 50, 121),
+      /*
+      appBar: AppBar(
+       // title: Text('Qrbar'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+            padding: EdgeInsets.zero,
+        children: <Widget>[
+          const UserAccountsDrawerHeader(
+            accountEmail: Text("thiagoewer@gmail.com"),
+            accountName: Text("Thiago Ewerton"),
+            currentAccountPicture: CircleAvatar(
+              child: Icon(Icons.person),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text("Meu Perfil"),
+            onTap: () {
+              Navigator.pop(context);
+              //Navegar para outra página
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text("Histórico de Leitura"),
+            onTap: () {
+              Navigator.pop(context);
+              //Navegar para outra página
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.warning_sharp),
+            title: const Text("Divergências"),
+            onTap: () {
+              Navigator.pop(context);
+              //Navegar para outra página
+            },
+          ),
+        ],
+        ),
+      ),*/
       body: Qrbar()
     );
   }

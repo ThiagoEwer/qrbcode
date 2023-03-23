@@ -22,7 +22,7 @@ Future<Map<String, dynamic>> fetch() async {
   final json = jsonDecode(response.body);
   return json;
 }
-//outros modelos que abaixo.
+
 /*
 //usado para testar a conexão.
 Future main() async {
