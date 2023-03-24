@@ -22,11 +22,24 @@ class _Produtostate extends State<Produtos> {
       body: jsonEncode({"codigo": codigo}),
     );
 
-    //verificar pq não está tendo retorno da descrição.
-    final desc = jsonDecode(response.body);
-    setState(() {
-      _descricao = desc['descricao'];
-    });
+    //get p/ retorno do json
+    //verificar se não tiver dando retorno na descrição.
+    try {
+      //verificar se o retorno do POST é um json ou um TEXTO(mais provável).
+      //DESSA FORMA, Eu transformo o conteudo de response.body que é um texto, em json.
+      //  final desc= {"product": response.body};
+      //DESSA FORMA, O body da response é um texto e "resolveu" o problema, porém ao usar o decode
+      final desc = response.body;
+      setState(() {
+        _descricao = desc;
+      });
+    } catch (e) {
+      print('Erro ao decodificar JSON: $e');
+
+      setState(() {
+        _descricao = null;
+      });
+    }
   }
 
   @override
@@ -82,7 +95,11 @@ class _Produtostate extends State<Produtos> {
                     onPressed: _enviarRequisicao,
                     child: const Text('Enviar'),
                   ),
-                  Text('DESCRIÇÃO: ${_descricao ?? 'Sem descrição'}'),
+                  //Text('DESCRIÇÃO: ${_descricao?.replaceAll(RegExp(r'[^\x00-\x7F\n\r]+|\n|\r'), ' ') ?? 'Sem descrição'}'),
+                  Text('DESCRIÇÃO: ${_descricao ?? 'Sem descrição'}',
+                  style: const TextStyle(
+                    color: Colors.white
+                  ),),
                   /*
                   if (_descricao != null) ...[
                     const SizedBox(height: 16),
