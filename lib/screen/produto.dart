@@ -45,9 +45,10 @@ class _Produtostate extends State<Produtos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*
+       appBar: AppBar(
         title: const Text('Produtos'),
-      ),
+      ),*/
       body: SingleChildScrollView(
         child: Container(
           color: const Color.fromARGB(255, 30, 22, 185),
