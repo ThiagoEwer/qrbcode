@@ -50,67 +50,101 @@ class _Produtostate extends State<Produtos> {
         title: const Text('Produtos'),
       ),*/
       body: SingleChildScrollView(
-        child: Container(
-          color: const Color.fromARGB(255, 30, 22, 185),
-          child: Column(
-            children: [
-              /*
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Qrbar()),
-                        );
-                      },
-                      child: const Text('VOLTAR'))
-                      
-                ],
-              ),
-              */
-              Container(
-                color: Colors.blue,
+        child: Column(
+          children: [
+            /*
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Qrbar()),
+                      );
+                    },
+                    child: const Text('VOLTAR'))
+                    
+              ],
+            ),
+            */
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                height: 120,
+                width: 350,
+                decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Column(children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: TextField(
-                      controller: _codigoController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                          labelText: 'DIGITE O COD DO PRODUTO',
-                          labelStyle: TextStyle(color: Colors.white),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 3,
-                          ))),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: TextField(
+                        controller: _codigoController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                            labelText: 'Digite o Código do Produto',
+                            labelStyle: TextStyle(color: Colors.white,
+                            fontSize: 12),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 3,
+                            ))),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _enviarRequisicao,
-                    child: const Text('Enviar'),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _enviarRequisicao,
+                          child: const Text('Enviar'),
+                        ),
+                      ],
+                    ),
                   ),
-                  //Text('DESCRIÇÃO: ${_descricao?.replaceAll(RegExp(r'[^\x00-\x7F\n\r]+|\n|\r'), ' ') ?? 'Sem descrição'}'),
-                  Text('DESCRIÇÃO: ${_descricao ?? 'Sem descrição'}',
-                  style: const TextStyle(
-                    color: Colors.white
-                  ),),
-                  /*
-                  if (_descricao != null) ...[
-                    const SizedBox(height: 16),
-                    Text(_descricao),
-                  ],
-                  */
                 ]),
-              )
-            ],
-          ),
+              ),
+            ),
+            Column(
+              children: [
+                Container(
+                  height: 500,
+                  width: 345,
+                  decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                              width: 50, child: Icon(Icons.inventory_2)),
+                          SizedBox(
+                             height: 35,
+                              width: 250,
+                            child: Text(
+                              'PRODUTO: ${_descricao ?? 'Sem descrição'}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ]),
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );

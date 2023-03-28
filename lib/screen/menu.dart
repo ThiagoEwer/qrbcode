@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qrbcode/controller/themecontroller.dart';
 import 'package:qrbcode/screen/produto.dart';
 import 'package:qrbcode/screen/qrbar.dart';
 
@@ -11,12 +12,11 @@ class Menu extends StatefulWidget {
   State<Menu> createState() => _MyHomePageState();
 }
 
-
 class _MyHomePageState extends State<Menu> {
-
 //atualização do relógio/data
-Stream<int> timerStream = Stream.periodic(const Duration(seconds: 1), (i) => i);
-
+  Stream<int> timerStream =
+      Stream.periodic(const Duration(seconds: 1), (i) => i);
+//troca de paginas do bottombar
   int _paginaAtual = 0;
   void aoMudarDeAba(int indice) {
     setState(() {
@@ -27,6 +27,7 @@ Stream<int> timerStream = Stream.periodic(const Duration(seconds: 1), (i) => i);
   final List<Widget> _telas = [
     const Qrbar(),
     const Produtos(),
+    const Produtos(), //novo tela para pedidos
   ];
 
   @override
@@ -37,7 +38,22 @@ Stream<int> timerStream = Stream.periodic(const Duration(seconds: 1), (i) => i);
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Switch(onChanged: (bool value) {  }, value: null,)
+            Container(
+              padding: const EdgeInsetsDirectional.only(end: 60),
+              child: const Text('QRBCode',
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              ),),
+            ),
+            //transform usado para englobar o switch e diminuir o seu tamanho.
+            Transform.scale(
+              scale: 0.8,
+              child: Switch(
+                  value: ThemeController.intance.isDarktheme,
+                  onChanged: (value) {
+                    ThemeController.intance.changeTheme();
+                  }),
+            ),
           ],
         ),
       ),
@@ -70,7 +86,7 @@ Stream<int> timerStream = Stream.periodic(const Duration(seconds: 1), (i) => i);
           },
         ),
         ListTile(
-          leading: const Icon(Icons.find_in_page),
+          leading: const Icon(Icons.inventory_2),
           title: const Text("Produtos"),
           onTap: () {
             Navigator.push(
@@ -89,7 +105,8 @@ Stream<int> timerStream = Stream.periodic(const Duration(seconds: 1), (i) => i);
           },
         )
       ])),
-      body: /* Column(
+      body:
+          /* Column(
         children: [
           Container(
             height: 28,
@@ -163,8 +180,8 @@ Stream<int> timerStream = Stream.periodic(const Duration(seconds: 1), (i) => i);
               ],
             ),
           ), */
-        _telas[_paginaAtual],
-      bottomNavigationBar:  BottomNavigationBar(
+          _telas[_paginaAtual],
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaAtual,
         onTap: aoMudarDeAba,
         // ignore: prefer_const_literals_to_create_immutables
@@ -174,11 +191,15 @@ Stream<int> timerStream = Stream.periodic(const Duration(seconds: 1), (i) => i);
             label: "QRBAR",
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.leaderboard),
+            icon: Icon(Icons.inventory_2),
             label: "PRODUTOS",
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.leaderboard),
+            label: "HISTÓRICO",
           ),
         ],
       ),
-      );
+    );
   }
 }

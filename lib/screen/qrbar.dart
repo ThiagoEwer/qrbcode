@@ -64,7 +64,7 @@ class _QrbarState extends State<Qrbar> {
                   height: 80,
   //                padding: EdgeInsets.only(top: 2),
                   decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 29, 50, 121),
+                    color: Colors.blue,
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Column(
                     children: [
@@ -197,7 +197,8 @@ class _QrbarState extends State<Qrbar> {
                     width: 356,
                     height: 540,
                     decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 118, 147, 243),
+                        color: Colors.blue,
+                        //color: Color.fromARGB(255, 118, 147, 243),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     child: Column(
                       children: <Widget>[
@@ -268,7 +269,7 @@ class _QrbarState extends State<Qrbar> {
                           width: 330,
                           height: 55,
                           decoration: const BoxDecoration(
-                              color: Colors.blueAccent,
+                              color: Colors.lightBlue,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
                           child: Column(

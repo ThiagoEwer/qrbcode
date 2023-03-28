@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:intl/intl.dart';
+import 'package:qrbcode/controller/themecontroller.dart';
 import 'package:qrbcode/screen/qrbar.dart';
 import 'db/table.dart';
 import 'api/get/reqhoras.dart';
@@ -35,19 +36,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(
-             primary: Colors.blue,
-          //    onPrimary: Colors.blue,
-              seedColor: const Color.fromARGB(255, 7, 189, 255),
-              brightness: Brightness.light,
-            ),
-),
-        home: const Menu(
-
-        ));
+    //animatedBuilder p/ trocar o tema através da ThemeController
+    return AnimatedBuilder(
+        animation: ThemeController.intance,
+        builder: (context, child) {
+          return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                useMaterial3: true,
+                colorScheme: ColorScheme.fromSeed(
+                  primary: Colors.blue,
+                  //    onPrimary: Colors.blue,
+                  seedColor: const Color.fromARGB(255, 7, 189, 255),
+                  brightness: ThemeController.intance.isDarktheme
+                      ? Brightness.light
+                      : Brightness.dark,
+                ),
+              ),
+              home: const Menu());
+        });
   }
 }
