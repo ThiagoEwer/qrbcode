@@ -1,3 +1,5 @@
+//SÓ PARA ESTUDOS
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -42,5 +44,5 @@ Future<void> fetchProduto(String codigo) async {
 */
 void main() async {
   // final cod = stdin.readLineSync();
-  await fetchProduto("AAC21");
+  await fetchProduto("ADC148");
 }

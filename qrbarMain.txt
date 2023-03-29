@@ -3,42 +3,32 @@
 //git commit -m "exemplo"
 //git push
 
-import 'dart:math';
-
+import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:barcode_scan2/barcode_scan2.dart';
-import './model/table.dart';
-import 'package:meta/meta.dart';
+import 'package:intl/intl.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import '../api/get/reqhoras.dart';
+import '../db/table.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp();
+class Qrbar extends StatefulWidget {
+  const Qrbar({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'LEITOR QRBAR',
-      theme: ThemeData(primaryColor: Colors.blue),
-      home: HomeScreen(),
-    );
-  }
+  State<Qrbar> createState() => _QrbarState();
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen();
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class _QrbarState extends State<Qrbar> {
   String barcode = "";
   String data = "";
   List<Table> tables = [];
+  Future<List<Barcode>> barcodes;
+
+  //para puxar todos os códigos na tabela.
+  @override
+  void initState() {
+    super.initState();
+    barcodes = Barcode.getAllBarcodes();
+  }
 
   Future scan() async {
     try {
@@ -61,103 +51,41 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Stream<int> timerStream =
+      Stream.periodic(const Duration(seconds: 1), (i) => i);
+
   @override
   Widget build(BuildContext context) {
-    /*
-    var barcode1 = Barcode(id: 1, code: '123456', data: 'Dados do código 1');
-    barcode1.saveBarcode();
-    var barcode2 = Barcode(id: 2, code: '234567', data: 'Dados do código 2');
-    barcode2.saveBarcode();
-    var barcode3 = Barcode(id: 3, code: '345678', data: 'Dados do código 3');
-    barcode3.saveBarcode();
-    var barcode4 = Barcode(id: 4, code: '456789', data: 'Dados do código 4');
-    barcode4.saveBarcode();
-    var barcode5 = Barcode(id: 5, code: '567890', data: 'Dados do código 5');
-    barcode5.saveBarcode();
-    */
-    var barcode6 = Barcode(id: 6, code: '667890', data: 'Dados do código 6');
-    barcode6.saveBarcode();
-
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 29, 50, 121),
-      body: Column(
-        children: [
-          const Padding(padding: EdgeInsets.all(7)),
-          SingleChildScrollView(
-            child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Padding(padding: EdgeInsets.all(7)),
+            Column(
               children: [
                 Container(
                   width: 350,
-                  height: 140,
+                  height: 80,
+  //                padding: EdgeInsets.only(top: 2),
                   decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 29, 50, 121),
+                    color: Colors.blue,
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Column(
                     children: [
                       const Padding(padding: EdgeInsets.all(5)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: const [
-                              ElevatedButton(
-                                onPressed: null,
-                                child: Icon(
-                                  Icons.menu,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                  child: Text(
-                                'Home Page',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              )),
-                            ],
-                          ), //COLOCAR BOTÃO
-                          Padding(
-                            padding: const EdgeInsets.only(left: 138, top: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: const [
-                                ElevatedButton(
-                                    onPressed: null,
-                                    child: Icon(
-                                      Icons.exit_to_app,
-                                      color: Colors.white,
-                                    )),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
                       Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              SizedBox(
-                                  child: Text(
-                                '  02, Fev, 2023',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.white),
-                              )),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              SizedBox(
+                            children: [
+                              const SizedBox(
                                 child: Icon(
                                   Icons.flutter_dash,
                                   color: Colors.white,
                                   size: 40,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                   child: Text(
                                 'Expedidor',
                                 style: TextStyle(
@@ -165,6 +93,101 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               )),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 70),
+                                child: SizedBox(
+                                  height: 35,
+                                  child: ElevatedButton(
+                                      onPressed: () async {
+                                        await Barcode.deleteAllBarcodes();
+                                      },
+                                      child: Row(
+                                        children: const [
+                                          Icon(
+                                            Icons.sync,
+                                          ),
+                                          Text("Sync"),
+                                          SizedBox(
+                                            width: 8,
+                                            height: 58,
+                                          ),
+                                        ],
+                                      )),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              //adicionado para pegar o conteudo de "date"
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8, top: 2,right: 5),
+                                child: StreamBuilder(
+                                    //StreamBuilder colocado para o recarregar o FutureBuilder a cada 1segundo.
+                                    stream: timerStream,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<int> snapshot) {
+                                      //Função FutureBuilder sempre vai ser usado para trabalhar com API's
+                                      return FutureBuilder(
+                                        //future requer a função já setada de uma api, um get já feito por exemplo, nesse caso a função fetch.
+                                        future: fetch(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot snapshot) {
+                                          //adicionei um verificador de conexão para relatar erro caso não tenha acesso a requisição http.
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.done) {
+                                            if (snapshot.hasError) {
+                                              return Text(
+                                                  'Erro: ${snapshot.error}');
+                                            } else {
+                                              //se não der erro, vai retornar o que foi pedido dentro da função fetch, nesse caso o date e time.
+                                              final date = snapshot.data['date'];
+                                              final time = snapshot.data['time'];
+                                              //formatação da data.
+                                              final parsedDate =
+                                                  DateTime.parse(date.toString());
+                                              final formattedDate =
+                                                  DateFormat('dd/MM/yyyy')
+                                                      .format(parsedDate);
+                                              final formattedTime = time;
+                                              //exibição da data já formatada na tela.
+                                              return Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    formattedDate,
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10),
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 5),
+                                                    child: Text(
+                                                      // ignore: unnecessary_string_interpolations
+                                                      formattedTime,
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 10),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            }
+                                          } else {
+                                            return const SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+                                        },
+                                      );
+                                    }),
+                              ),
                             ],
                           ),
                         ],
@@ -178,22 +201,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 356,
                     height: 540,
                     decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 118, 147, 243),
+                        color: Colors.blue,
+                        //color: Color.fromARGB(255, 118, 147, 243),
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     child: Column(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(left: 13),
+                          padding: const EdgeInsets.only(left: 7),
                           child: SizedBox(
                             width: double.infinity,
-                            height: 100,
+                            height: 80,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 ElevatedButton(
                                   onPressed: scan,
                                   child: Row(
-                                    //    mainAxisAlignment: MainAxisAlignment.end,
                                     mainAxisSize: MainAxisSize.min,
                                     children: const <Widget>[
                                       Icon(Icons.qr_code),
@@ -206,8 +229,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 10, left: 10),
+                                  padding:
+                                      const EdgeInsets.only(right: 10, left: 10),
                                   child: ElevatedButton(
                                     onPressed: () async {
                                       Barcode b = Barcode(
@@ -236,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       Text("Limpar"),
                                       SizedBox(
-                                        width: 8,
+                                        width: 5,
                                         height: 58,
                                       ),
                                     ],
@@ -248,16 +271,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Container(
                           width: 330,
-                          height: 120,
+                          height: 55,
                           decoration: const BoxDecoration(
-                              color: Colors.blueAccent,
+                              color: Colors.lightBlue,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
                           child: Column(
                             children: [
-                              SizedBox(
+                              Container(
                                 width: double.infinity,
-                                height: 80,
+                                height: 25,
+                                padding: const EdgeInsets.only(top: 5),
                                 child: Center(
                                   child: Text(
                                     "COD BARRA: $barcode",
@@ -268,31 +292,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              Container(
                                 width: double.infinity,
-                                height: 40,
-                                child: Column(
-                                  children: [
-                                    Center(
-                                      child: Text("FORMATO: $data",
-                                          style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ],
+                                height: 25,
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Center(
+                                  child: Text("FORMATO: $data",
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold)),
                                 ),
                               ),
                             ],
                           ),
                         ),
-
-                        //Adicionado para mostrar os códigos de barras já salvos.
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                             width: 330,
-                            height: 300,
+                            height: 350,
                             decoration: const BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:
@@ -320,7 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           trailing: const Icon(Icons.more_vert),
                                         );
                                       },
-                                      //.separeted
                                       separatorBuilder:
                                           (BuildContext context, int index) {
                                         return const Divider();
@@ -339,8 +357,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

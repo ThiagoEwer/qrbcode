@@ -1,8 +1,6 @@
-
 import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../api/get/reqhoras.dart';
 import '../db/table.dart';
 
@@ -14,18 +12,40 @@ class Qrbar extends StatefulWidget {
 }
 
 class _QrbarState extends State<Qrbar> {
-  String barcode = "";
+  // String barcode = "";
+  List<String> barcodes = [];
   String data = "";
   List<Table> tables = [];
-  Future<List<Barcode>> barcodes;
-
+  //alterado parabarcodeData;
+  Future<List<Barcode>> barcodeData;
   //para puxar todos os códigos na tabela.
   @override
   void initState() {
     super.initState();
-    barcodes = Barcode.getAllBarcodes();
+    //alterado para barcodeData
+    barcodeData = Barcode.getAllBarcodes();
   }
 
+  String currentBarcode = "";
+
+  Future scan() async {
+    try {
+      var result = await BarcodeScanner.scan();
+
+      setState(() {
+        barcodes.add(result.rawContent);
+        data = result.format.toString();
+        tables.add(Table());
+        Barcode(code: result.rawContent, data: data).saveBarcode();
+
+        currentBarcode = result.rawContent;
+      });
+    } catch (e) {
+      Future.error("Ocorreu um erro ao escanear o código de barras");
+    }
+  }
+
+/*
   Future scan() async {
     try {
       var result = await BarcodeScanner.scan();
@@ -42,8 +62,15 @@ class _QrbarState extends State<Qrbar> {
 
   void _limpar() {
     setState(() {
-      barcode = "";
+      barcodes = "";
       data = "";
+    });
+*/
+  void _limpar() {
+    setState(() {
+      barcodes = [];
+      data = "";
+      Barcode.deleteAllBarcodes();
     });
   }
 
@@ -62,9 +89,9 @@ class _QrbarState extends State<Qrbar> {
                 Container(
                   width: 350,
                   height: 80,
-  //                padding: EdgeInsets.only(top: 2),
+                  //                padding: EdgeInsets.only(top: 2),
                   decoration: const BoxDecoration(
-                    color: Colors.blue,
+                      color: Colors.blue,
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Column(
                     children: [
@@ -118,7 +145,8 @@ class _QrbarState extends State<Qrbar> {
                             children: [
                               //adicionado para pegar o conteudo de "date"
                               Padding(
-                                padding: const EdgeInsets.only(left: 8, top: 2,right: 5),
+                                padding: const EdgeInsets.only(
+                                    left: 8, top: 2, right: 5),
                                 child: StreamBuilder(
                                     //StreamBuilder colocado para o recarregar o FutureBuilder a cada 1segundo.
                                     stream: timerStream,
@@ -138,11 +166,13 @@ class _QrbarState extends State<Qrbar> {
                                                   'Erro: ${snapshot.error}');
                                             } else {
                                               //se não der erro, vai retornar o que foi pedido dentro da função fetch, nesse caso o date e time.
-                                              final date = snapshot.data['date'];
-                                              final time = snapshot.data['time'];
+                                              final date =
+                                                  snapshot.data['date'];
+                                              final time =
+                                                  snapshot.data['time'];
                                               //formatação da data.
-                                              final parsedDate =
-                                                  DateTime.parse(date.toString());
+                                              final parsedDate = DateTime.parse(
+                                                  date.toString());
                                               final formattedDate =
                                                   DateFormat('dd/MM/yyyy')
                                                       .format(parsedDate);
@@ -225,13 +255,19 @@ class _QrbarState extends State<Qrbar> {
                                   ),
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 10, left: 10),
+                                  padding: const EdgeInsets.only(
+                                      right: 10, left: 10),
                                   child: ElevatedButton(
                                     onPressed: () async {
                                       Barcode b = Barcode(
-                                          id: 0, code: barcode, data: data);
+                                          id: 0,
+                                          //  code: barcodes.join(),
+                                          code: currentBarcode,
+                                          data: data);
                                       await b.saveBarcode();
+                                      setState(() {
+                                        barcodes.add(currentBarcode);
+                                      });
                                     },
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -265,6 +301,7 @@ class _QrbarState extends State<Qrbar> {
                             ),
                           ),
                         ),
+                        /*
                         Container(
                           width: 330,
                           height: 55,
@@ -274,19 +311,45 @@ class _QrbarState extends State<Qrbar> {
                                   BorderRadius.all(Radius.circular(20))),
                           child: Column(
                             children: [
+                              /*
                               Container(
                                 width: double.infinity,
                                 height: 25,
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Center(
                                   child: Text(
-                                    "COD BARRA: $barcode",
+                                    "COD BARRA: $barcodes",
                                     style: const TextStyle(
                                         fontSize: 15,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
+                              ),
+                              */
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 4,
+                                children:
+                                    List.generate(barcodes.length, (index) {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.lightBlue,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      "COD BARRA: $currentBarcode",
+                                      //                 barcodes[index],
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                }),
                               ),
                               Container(
                                 width: double.infinity,
@@ -302,7 +365,7 @@ class _QrbarState extends State<Qrbar> {
                               ),
                             ],
                           ),
-                        ),
+                        ),*/
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -319,20 +382,26 @@ class _QrbarState extends State<Qrbar> {
                                     return ListView.separated(
                                       itemCount: snapshot.data.length,
                                       itemBuilder: (context, index) {
-                                        return ListTile(
-                                          leading: const Icon(Icons.qr_code_2),
-                                          title: Text(
-                                            snapshot.data[index].code,
-                                            style: const TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.blueAccent,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          subtitle: Text(
-                                              snapshot.data[index].data,
+                                        return Card(
+                                          elevation: 1,
+                                          child: ListTile(
+                                            leading:
+                                                const Icon(Icons.qr_code_2),
+                                            title: Text(
+                                              snapshot.data[index].code,
                                               style: const TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          trailing: const Icon(Icons.more_vert),
+                                                  fontSize: 15,
+                                                  color: Colors.blueAccent,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            subtitle: Text(
+                                                snapshot.data[index].data,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            trailing:
+                                                const Icon(Icons.more_vert),
+                                          ),
                                         );
                                       },
                                       separatorBuilder:

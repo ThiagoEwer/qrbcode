@@ -1,11 +1,18 @@
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+
+Future<Map<String, dynamic>> fetch() async {
+  const url = 'http://10.0.0.10:8400/rest/zwstest';
+  final response = await http.get(Uri.parse(url));
+  final gethoras = jsonDecode(response.body);
+  return gethoras;
+}
 Future<void> main() async {
   try {
-    final json = await fetch();
-    final date = json['date'];
-    final time = json['time'];
+    final gethoras = await fetch();
+    final date = gethoras['date'];
+    final time = gethoras['time'];
     //verificador pra ver se o conteudo de date está presente no json.
     print('Data: $date');
     if (time != null) {
@@ -14,13 +21,6 @@ Future<void> main() async {
   } catch (e) {
     print('Erro: $e');
   }
-}
-
-Future<Map<String, dynamic>> fetch() async {
-  const url = 'http://10.0.0.10:8400/rest/zwstest';
-  final response = await http.get(Uri.parse(url));
-  final json = jsonDecode(response.body);
-  return json;
 }
 
 /*

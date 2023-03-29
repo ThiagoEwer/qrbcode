@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrbcode/controller/themecontroller.dart';
+import 'package:qrbcode/screen/historicoprod.dart';
 import 'package:qrbcode/screen/produto.dart';
 import 'package:qrbcode/screen/qrbar.dart';
 
@@ -27,7 +28,7 @@ class _MyHomePageState extends State<Menu> {
   final List<Widget> _telas = [
     const Qrbar(),
     const Produtos(),
-    const Produtos(), //novo tela para pedidos
+    const HistoricoScreen(), //novo tela para pedidos
   ];
 
   @override
