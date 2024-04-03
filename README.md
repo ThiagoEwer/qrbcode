@@ -1,6 +1,7 @@
 # qrbcode
 
-A new Flutter project.
+Projeto de leitor de códigos de barras em flutter usado na empresa RAVA Embalagens para facilitar a leitura dos produtos in loco, assim como as notas fiscais a serem expedidas.
+Projeto funcional e 100% autoral.
 
 ## Getting Started
 
